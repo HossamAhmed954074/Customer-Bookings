@@ -23,11 +23,7 @@ class RegisterHeader extends StatelessWidget {
         Text(
           'Start booking classes and exploring\nbusinesses today!',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 15,
-            color: Colors.grey[600],
-            height: 1.5,
-          ),
+          style: TextStyle(fontSize: 15, color: Colors.grey[600], height: 1.5),
         ),
         const SizedBox(height: 32),
       ],

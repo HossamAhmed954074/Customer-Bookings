@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 class LoginPrompt extends StatelessWidget {
   final VoidCallback onLoginPressed;
 
-  const LoginPrompt({
-    super.key,
-    required this.onLoginPressed,
-  });
+  const LoginPrompt({super.key, required this.onLoginPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +12,7 @@ class LoginPrompt extends StatelessWidget {
       children: [
         Text(
           'Already have an account? ',
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 14,
-          ),
+          style: TextStyle(color: Colors.grey[600], fontSize: 14),
         ),
         GestureDetector(
           onTap: onLoginPressed,

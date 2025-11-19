@@ -76,9 +76,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 isLoading: _isLoading,
               ),
               const SizedBox(height: 24),
-              LoginPrompt(
-                onLoginPressed: _handleLogin,
-              ),
+              LoginPrompt(onLoginPressed: _handleLogin),
               const SizedBox(height: 40),
             ],
           ),
