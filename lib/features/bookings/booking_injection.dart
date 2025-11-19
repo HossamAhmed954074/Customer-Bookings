@@ -41,21 +41,15 @@ class BookingInjection {
 
   // Use Cases
   static CreateBookingUseCase getCreateBookingUseCase(ApiConsumer apiConsumer) {
-    return CreateBookingUseCase(
-      repository: getBookingRepository(apiConsumer),
-    );
+    return CreateBookingUseCase(repository: getBookingRepository(apiConsumer));
   }
 
   static GetMyBookingsUseCase getGetMyBookingsUseCase(ApiConsumer apiConsumer) {
-    return GetMyBookingsUseCase(
-      repository: getBookingRepository(apiConsumer),
-    );
+    return GetMyBookingsUseCase(repository: getBookingRepository(apiConsumer));
   }
 
   static CancelBookingUseCase getCancelBookingUseCase(ApiConsumer apiConsumer) {
-    return CancelBookingUseCase(
-      repository: getBookingRepository(apiConsumer),
-    );
+    return CancelBookingUseCase(repository: getBookingRepository(apiConsumer));
   }
 
   // Cubits
@@ -74,15 +68,11 @@ class BookingInjection {
 
   // Credits Cubit
   static CreditsCubit getCreditsCubit(ApiConsumer apiConsumer) {
-    return CreditsCubit(
-      dataSource: getCreditsDataSource(apiConsumer),
-    );
+    return CreditsCubit(dataSource: getCreditsDataSource(apiConsumer));
   }
 
   // User Profile Cubit
   static UserProfileCubit getUserProfileCubit(ApiConsumer apiConsumer) {
-    return UserProfileCubit(
-      apiConsumer: apiConsumer,
-    );
+    return UserProfileCubit(apiConsumer: apiConsumer);
   }
 }

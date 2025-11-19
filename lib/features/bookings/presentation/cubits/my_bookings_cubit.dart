@@ -24,10 +24,7 @@ class MyBookingsCubit extends Cubit<MyBookingsState> {
         (error) {
           debugPrint('Failed to load bookings: $error');
           emit(
-            state.copyWith(
-              status: MyBookingsStatus.error,
-              errorMessage: error,
-            ),
+            state.copyWith(status: MyBookingsStatus.error, errorMessage: error),
           );
         },
         (bookings) {
@@ -76,7 +73,7 @@ class MyBookingsCubit extends Cubit<MyBookingsState> {
         },
         (cancelledBooking) {
           debugPrint('Booking cancelled successfully: ${cancelledBooking.id}');
-          
+
           // Update the booking in the list
           final updatedBookings = state.bookings.map((booking) {
             if (booking.id == cancelledBooking.id) {

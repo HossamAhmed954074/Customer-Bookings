@@ -23,12 +23,12 @@ class CreditPackage extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        credits,
-        price,
-        description,
-        isPopular,
-        discount,
-      ];
+    id,
+    name,
+    credits,
+    price,
+    description,
+    isPopular,
+    discount,
+  ];
 }

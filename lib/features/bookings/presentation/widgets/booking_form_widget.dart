@@ -79,10 +79,7 @@ class _BookingFormWidgetState extends State<BookingFormWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Your Credits:',
-                    style: TextStyle(fontSize: 15),
-                  ),
+                  const Text('Your Credits:', style: TextStyle(fontSize: 15)),
                   Text(
                     '${widget.userCredits}',
                     style: const TextStyle(
@@ -98,17 +95,16 @@ class _BookingFormWidgetState extends State<BookingFormWidget> {
                 children: [
                   const Text(
                     'Balance After:',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                   Text(
                     '${widget.userCredits - widget.creditsRequired}',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: _hasEnoughCredits ? Colors.green[700] : Colors.red[700],
+                      color: _hasEnoughCredits
+                          ? Colors.green[700]
+                          : Colors.red[700],
                     ),
                   ),
                 ],
@@ -133,10 +129,7 @@ class _BookingFormWidgetState extends State<BookingFormWidget> {
                 Expanded(
                   child: Text(
                     'You don\'t have enough credits. Please purchase more credits to continue.',
-                    style: TextStyle(
-                      color: Colors.orange[900],
-                      fontSize: 13,
-                    ),
+                    style: TextStyle(color: Colors.orange[900], fontSize: 13),
                   ),
                 ),
               ],
@@ -154,9 +147,7 @@ class _BookingFormWidgetState extends State<BookingFormWidget> {
           decoration: InputDecoration(
             labelText: 'Notes (Optional)',
             hintText: 'Add any special notes or requests...',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
             fillColor: Colors.grey[50],
           ),
@@ -169,7 +160,9 @@ class _BookingFormWidgetState extends State<BookingFormWidget> {
           children: [
             Expanded(
               child: OutlinedButton(
-                onPressed: widget.isLoading ? null : () => Navigator.pop(context),
+                onPressed: widget.isLoading
+                    ? null
+                    : () => Navigator.pop(context),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
@@ -200,7 +193,9 @@ class _BookingFormWidgetState extends State<BookingFormWidget> {
                         width: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
                         ),
                       )
                     : const Text('Confirm Booking'),

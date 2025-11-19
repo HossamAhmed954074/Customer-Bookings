@@ -2,6 +2,7 @@ import 'package:customer_booking/features/bookings/presentation/cubits/my_bookin
 import 'package:customer_booking/features/bookings/presentation/cubits/my_bookings_state.dart';
 import 'package:customer_booking/features/bookings/presentation/widgets/booking_card.dart';
 import 'package:customer_booking/features/bookings/presentation/widgets/empty_bookings_widget.dart';
+import 'package:customer_booking/core/presentation/tab_navigation_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -165,8 +166,19 @@ class _BookingsList extends StatelessWidget {
         submessage: emptySubmessage,
         actionLabel: 'Browse Classes',
         onAction: () {
-          // TODO: Navigate to home/browse screen
-          Navigator.pop(context);
+          // Switch to home tab (index 0)
+          final tabNavigation = TabNavigationProvider.of(context);
+          if (tabNavigation != null) {
+            tabNavigation.onTabChange(0);
+          } else {
+            // Fallback: show message
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Use the Home tab to browse classes'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          }
         },
       );
     }

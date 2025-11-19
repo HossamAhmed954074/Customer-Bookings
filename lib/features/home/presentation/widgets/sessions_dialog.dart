@@ -120,10 +120,7 @@ class _SessionItem extends StatelessWidget {
   final Session session;
   final String businessName;
 
-  const _SessionItem({
-    required this.session,
-    required this.businessName,
-  });
+  const _SessionItem({required this.session, required this.businessName});
 
   @override
   Widget build(BuildContext context) {
@@ -150,9 +147,9 @@ class _SessionItem extends StatelessWidget {
                                 BookingInjection.getBookingCubit(apiConsumer),
                           ),
                           BlocProvider(
-                            create: (_) =>
-                                BookingInjection.getUserProfileCubit(apiConsumer)
-                                  ..loadProfile(),
+                            create: (_) => BookingInjection.getUserProfileCubit(
+                              apiConsumer,
+                            )..loadProfile(),
                           ),
                         ],
                         child: BookingScreen(
@@ -163,7 +160,16 @@ class _SessionItem extends StatelessWidget {
                     ),
                   );
                 }
-              : null,
+              : () {
+                  // Show message when class is full
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('This class is fully booked'),
+                      backgroundColor: Colors.orange,
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                },
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(

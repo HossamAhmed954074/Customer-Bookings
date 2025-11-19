@@ -41,9 +41,9 @@ class MyBookingsState extends Equatable {
 
   @override
   List<Object?> get props => [
-        status,
-        bookings,
-        errorMessage,
-        cancellingBookingId,
-      ];
+    status,
+    bookings,
+    errorMessage,
+    cancellingBookingId,
+  ];
 }

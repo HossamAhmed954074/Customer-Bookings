@@ -83,10 +83,7 @@ class CreditPackageCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   'credits',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   textAlign: TextAlign.center,
                 ),
 
@@ -94,10 +91,7 @@ class CreditPackageCard extends StatelessWidget {
                   const SizedBox(height: 12),
                   Text(
                     package.description!,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[700],
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.grey[700]),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -139,8 +133,9 @@ class CreditPackageCard extends StatelessWidget {
                           width: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
                           ),
                         )
                       : const Text(

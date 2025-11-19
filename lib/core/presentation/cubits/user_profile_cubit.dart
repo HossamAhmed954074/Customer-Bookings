@@ -8,7 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class UserProfileCubit extends Cubit<UserProfileState> {
   final ApiConsumer apiConsumer;
 
-  UserProfileCubit({required this.apiConsumer}) : super(const UserProfileState());
+  UserProfileCubit({required this.apiConsumer})
+    : super(const UserProfileState());
 
   Future<void> loadProfile() async {
     try {
@@ -18,11 +19,9 @@ class UserProfileCubit extends Cubit<UserProfileState> {
       debugPrint('=== LOADING USER PROFILE ===');
       debugPrint('Token exists: ${token != null}');
       debugPrint('Token: $token');
-      
+
       // Use query parameter instead of header for this API
-      final response = await apiConsumer.get(
-        '/auth/me?token=$token',
-      );
+      final response = await apiConsumer.get('/auth/me?token=$token');
 
       debugPrint('=== PROFILE API RESPONSE ===');
       debugPrint('Response Type: ${response.data.runtimeType}');
@@ -49,14 +48,13 @@ class UserProfileCubit extends Cubit<UserProfileState> {
         debugPrint('User Credits: ${data['credits']}');
 
         final profile = UserProfileModel.fromJson(data).toEntity();
-        
+
         debugPrint('=== PROFILE PARSED SUCCESSFULLY ===');
         debugPrint('Profile Credits: ${profile.credits}');
-        
-        emit(state.copyWith(
-          status: UserProfileStatus.loaded,
-          profile: profile,
-        ));
+
+        emit(
+          state.copyWith(status: UserProfileStatus.loaded, profile: profile),
+        );
       } else {
         debugPrint('✗ Response is not a Map');
         throw Exception('Invalid response format');
@@ -65,10 +63,12 @@ class UserProfileCubit extends Cubit<UserProfileState> {
       debugPrint('=== ERROR LOADING PROFILE ===');
       debugPrint('Error: $e');
       debugPrint('StackTrace: $stackTrace');
-      emit(state.copyWith(
-        status: UserProfileStatus.error,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          status: UserProfileStatus.error,
+          errorMessage: e.toString(),
+        ),
+      );
     }
   }
 

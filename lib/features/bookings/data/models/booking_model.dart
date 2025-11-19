@@ -39,7 +39,7 @@ class BookingModel {
     print('sessionDate from API: ${json['sessionDate']}');
     print('createdAt from API: ${json['createdAt']}');
     print('cancelledAt from API: ${json['cancelledAt']}');
-    
+
     return BookingModel(
       id: json['_id'] ?? json['id'] ?? '',
       sessionId: json['sessionId'] ?? '',

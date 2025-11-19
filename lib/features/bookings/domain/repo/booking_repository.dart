@@ -9,9 +9,7 @@ abstract class BookingRepository {
   );
 
   /// Get all bookings for the current user
-  Future<Either<String, List<BookingEntity>>> getMyBookings({
-    String? status,
-  });
+  Future<Either<String, List<BookingEntity>>> getMyBookings({String? status});
 
   /// Get a specific booking by ID
   Future<Either<String, BookingEntity>> getBookingById(String bookingId);

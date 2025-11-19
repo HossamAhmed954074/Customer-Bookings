@@ -7,19 +7,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class BookingCubit extends Cubit<BookingState> {
   final CreateBookingUseCase createBookingUseCase;
 
-  BookingCubit({
-    required this.createBookingUseCase,
-  }) : super(const BookingState());
+  BookingCubit({required this.createBookingUseCase})
+    : super(const BookingState());
 
-  Future<void> createBooking({
-    required String sessionId,
-    String? notes,
-  }) async {
+  Future<void> createBooking({required String sessionId, String? notes}) async {
     try {
       emit(state.copyWith(status: BookingStatus.loading));
 
       // Generate idempotency key
-      final idempotencyKey = '${DateTime.now().millisecondsSinceEpoch}_$sessionId';
+      final idempotencyKey =
+          '${DateTime.now().millisecondsSinceEpoch}_$sessionId';
 
       final request = CreateBookingRequest(
         sessionId: sessionId,
@@ -34,29 +31,18 @@ class BookingCubit extends Cubit<BookingState> {
         (error) {
           debugPrint('Booking creation failed: $error');
           emit(
-            state.copyWith(
-              status: BookingStatus.error,
-              errorMessage: error,
-            ),
+            state.copyWith(status: BookingStatus.error, errorMessage: error),
           );
         },
         (booking) {
           debugPrint('Booking created successfully: ${booking.id}');
-          emit(
-            state.copyWith(
-              status: BookingStatus.success,
-              booking: booking,
-            ),
-          );
+          emit(state.copyWith(status: BookingStatus.success, booking: booking));
         },
       );
     } catch (e) {
       debugPrint('Unexpected error in createBooking: $e');
       emit(
-        state.copyWith(
-          status: BookingStatus.error,
-          errorMessage: e.toString(),
-        ),
+        state.copyWith(status: BookingStatus.error, errorMessage: e.toString()),
       );
     }
   }

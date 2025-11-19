@@ -4,9 +4,11 @@ import 'package:customer_booking/features/credits/presentation/screens/purchase_
 import 'package:customer_booking/features/bookings/booking_injection.dart';
 import 'package:customer_booking/core/services/api/dio_consumer.dart';
 import 'package:customer_booking/core/services/auth_storage_service.dart';
+import 'package:customer_booking/core/routers/router.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -41,7 +43,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Colors.red,
+                    ),
                     const SizedBox(height: 16),
                     Text(
                       'Failed to load profile',
@@ -95,16 +101,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           CircleAvatar(
                             radius: 50,
                             backgroundColor: Colors.white,
-                            child: profile.avatarUrl != null && profile.avatarUrl!.isNotEmpty
+                            child:
+                                profile.avatarUrl != null &&
+                                    profile.avatarUrl!.isNotEmpty
                                 ? ClipOval(
                                     child: Image.network(
                                       profile.avatarUrl!,
                                       width: 100,
                                       height: 100,
                                       fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) {
-                                        return _buildDefaultAvatar(profile.name);
-                                      },
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                            return _buildDefaultAvatar(
+                                              profile.name,
+                                            );
+                                          },
                                     ),
                                   )
                                 : _buildDefaultAvatar(profile.name),
@@ -147,32 +158,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       // Account Information
                       _buildSectionTitle('Account Information'),
                       const SizedBox(height: 8),
-                      _buildInfoCard(
-                        context,
-                        [
+                      _buildInfoCard(context, [
+                        _InfoItem(
+                          icon: Icons.person_outline,
+                          label: 'Full Name',
+                          value: profile.name,
+                        ),
+                        _InfoItem(
+                          icon: Icons.email_outlined,
+                          label: 'Email',
+                          value: profile.email,
+                        ),
+                        if (profile.phone != null && profile.phone!.isNotEmpty)
                           _InfoItem(
-                            icon: Icons.person_outline,
-                            label: 'Full Name',
-                            value: profile.name,
+                            icon: Icons.phone_outlined,
+                            label: 'Phone',
+                            value: profile.phone!,
                           ),
-                          _InfoItem(
-                            icon: Icons.email_outlined,
-                            label: 'Email',
-                            value: profile.email,
-                          ),
-                          if (profile.phone != null && profile.phone!.isNotEmpty)
-                            _InfoItem(
-                              icon: Icons.phone_outlined,
-                              label: 'Phone',
-                              value: profile.phone!,
-                            ),
-                          _InfoItem(
-                            icon: Icons.badge_outlined,
-                            label: 'Account Type',
-                            value: profile.role.toUpperCase(),
-                          ),
-                        ],
-                      ),
+                        _InfoItem(
+                          icon: Icons.badge_outlined,
+                          label: 'Account Type',
+                          value: profile.role.toUpperCase(),
+                        ),
+                      ]),
                       const SizedBox(height: 16),
 
                       // Quick Actions
@@ -232,11 +240,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               MaterialPageRoute(
                 builder: (_) => MultiBlocProvider(
                   providers: [
-                    BlocProvider.value(
-                      value: context.read<UserProfileCubit>(),
-                    ),
+                    BlocProvider.value(value: context.read<UserProfileCubit>()),
                     BlocProvider(
-                      create: (_) => BookingInjection.getCreditsCubit(apiConsumer),
+                      create: (_) =>
+                          BookingInjection.getCreditsCubit(apiConsumer),
                     ),
                   ],
                   child: const PurchaseCreditsScreen(),
@@ -254,11 +261,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(
-                    Icons.stars,
-                    color: Colors.white,
-                    size: 32,
-                  ),
+                  child: const Icon(Icons.stars, color: Colors.white, size: 32),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -267,10 +270,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       const Text(
                         'Available Credits',
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 14,
-                        ),
+                        style: TextStyle(color: Colors.white70, fontSize: 14),
                       ),
                       const SizedBox(height: 4),
                       Text(
@@ -337,10 +337,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 title: Text(
                   items[index].label,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 ),
                 subtitle: Text(
                   items[index].value,
@@ -390,7 +387,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         value: context.read<UserProfileCubit>(),
                       ),
                       BlocProvider(
-                        create: (_) => BookingInjection.getCreditsCubit(apiConsumer),
+                        create: (_) =>
+                            BookingInjection.getCreditsCubit(apiConsumer),
                       ),
                     ],
                     child: const PurchaseCreditsScreen(),
@@ -406,9 +404,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             subtitle: 'View your credit transactions',
             onTap: () {
               // TODO: Implement transaction history
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Coming soon!')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('Coming soon!')));
             },
           ),
           Divider(height: 1, color: Colors.grey[200]),
@@ -418,9 +416,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             subtitle: 'Update your information',
             onTap: () {
               // TODO: Implement edit profile
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Coming soon!')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('Coming soon!')));
             },
           ),
         ],
@@ -445,17 +443,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       title: Text(
         title,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-        ),
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
       ),
       subtitle: Text(
         subtitle,
-        style: TextStyle(
-          fontSize: 12,
-          color: Colors.grey[600],
-        ),
+        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
       ),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
       onTap: onTap,
@@ -496,10 +488,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (confirmed == true && context.mounted) {
             await AuthStorageService.clearToken();
             if (context.mounted) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                '/login',
-                (route) => false,
-              );
+              context.go(AppRouters.loginRoute);
             }
           }
         },
@@ -525,9 +514,5 @@ class _InfoItem {
   final String label;
   final String value;
 
-  _InfoItem({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
+  _InfoItem({required this.icon, required this.label, required this.value});
 }

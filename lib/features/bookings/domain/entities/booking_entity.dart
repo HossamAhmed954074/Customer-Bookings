@@ -41,19 +41,19 @@ class BookingEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        sessionId,
-        userId,
-        businessId,
-        businessName,
-        sessionName,
-        sessionDate,
-        sessionStartTime,
-        sessionEndTime,
-        credits,
-        status,
-        notes,
-        createdAt,
-        cancelledAt,
-      ];
+    id,
+    sessionId,
+    userId,
+    businessId,
+    businessName,
+    sessionName,
+    sessionDate,
+    sessionStartTime,
+    sessionEndTime,
+    credits,
+    status,
+    notes,
+    createdAt,
+    cancelledAt,
+  ];
 }

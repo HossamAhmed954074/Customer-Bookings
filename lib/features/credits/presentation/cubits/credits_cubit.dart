@@ -15,18 +15,19 @@ class CreditsCubit extends Cubit<CreditsState> {
       debugPrint('Loading credit packages...');
       final packages = await dataSource.getCreditPackages();
 
-      emit(state.copyWith(
-        status: CreditsStatus.loaded,
-        packages: packages.map((m) => m.toEntity()).toList(),
-      ));
+      emit(
+        state.copyWith(
+          status: CreditsStatus.loaded,
+          packages: packages.map((m) => m.toEntity()).toList(),
+        ),
+      );
 
       debugPrint('Loaded ${packages.length} credit packages');
     } catch (e) {
       debugPrint('Error loading credit packages: $e');
-      emit(state.copyWith(
-        status: CreditsStatus.error,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(status: CreditsStatus.error, errorMessage: e.toString()),
+      );
     }
   }
 
@@ -37,18 +38,16 @@ class CreditsCubit extends Cubit<CreditsState> {
       debugPrint('Purchasing credits for package: $packageId');
       final result = await dataSource.purchaseCredits(packageId);
 
-      emit(state.copyWith(
-        status: CreditsStatus.success,
-        purchaseResult: result,
-      ));
+      emit(
+        state.copyWith(status: CreditsStatus.success, purchaseResult: result),
+      );
 
       debugPrint('Credits purchased successfully');
     } catch (e) {
       debugPrint('Error purchasing credits: $e');
-      emit(state.copyWith(
-        status: CreditsStatus.error,
-        errorMessage: e.toString(),
-      ));
+      emit(
+        state.copyWith(status: CreditsStatus.error, errorMessage: e.toString()),
+      );
     }
   }
 

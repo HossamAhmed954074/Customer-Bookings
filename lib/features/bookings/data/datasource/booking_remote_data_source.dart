@@ -14,15 +14,11 @@ abstract class BookingRemoteDataSource {
 class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
   final ApiConsumer apiConsumer;
 
-  BookingRemoteDataSourceImpl({
-    required this.apiConsumer,
-  });
+  BookingRemoteDataSourceImpl({required this.apiConsumer});
 
   Future<Map<String, String>> _getAuthHeaders(String? idempotencyKey) async {
     final token = await AuthStorageService.getToken();
-    final headers = {
-      'Authorization': 'Bearer ${token ?? ""}',
-    };
+    final headers = {'Authorization': 'Bearer ${token ?? ""}'};
     if (idempotencyKey != null) {
       headers['Idempotency-Key'] = idempotencyKey;
     }
@@ -101,7 +97,9 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
         debugPrint('✓ Response has data array with ${dataList.length} items');
       } else if (response.data is Map && response.data['bookings'] != null) {
         dataList = response.data['bookings'] as List;
-        debugPrint('✓ Response has bookings array with ${dataList.length} items');
+        debugPrint(
+          '✓ Response has bookings array with ${dataList.length} items',
+        );
       } else {
         debugPrint('✗ Unexpected response format');
         return [];

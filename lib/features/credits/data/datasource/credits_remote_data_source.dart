@@ -15,9 +15,7 @@ class CreditsRemoteDataSourceImpl implements CreditsRemoteDataSource {
 
   Future<Map<String, String>> _getAuthHeaders() async {
     final token = await AuthStorageService.getToken();
-    return {
-      'Authorization': 'Bearer ${token ?? ""}',
-    };
+    return {'Authorization': 'Bearer ${token ?? ""}'};
   }
 
   @override

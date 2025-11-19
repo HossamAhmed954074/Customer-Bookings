@@ -27,10 +27,7 @@ class BookingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text('Book Class'),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: const Text('Book Class'), elevation: 0),
       body: BlocConsumer<BookingCubit, BookingState>(
         listener: (context, state) {
           if (state.status == BookingStatus.success && state.booking != null) {
@@ -39,12 +36,13 @@ class BookingScreen extends StatelessWidget {
               showDialog(
                 context: context,
                 barrierDismissible: false,
-                builder: (_) => BookingConfirmationDialog(
+                builder: (dialogContext) => BookingConfirmationDialog(
                   booking: state.booking!,
                   onViewBookings: () {
-                    // Navigate to My Bookings screen
-                    Navigator.pop(context); // Close booking screen
-                    // TODO: Navigate to My Bookings tab/screen
+                    // Close the dialog first
+                    Navigator.pop(dialogContext);
+                    // Then close the booking screen
+                    Navigator.pop(context);
                   },
                 ),
               );
@@ -67,10 +65,7 @@ class BookingScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Class information card
-                _ClassInfoCard(
-                  session: session,
-                  businessName: businessName,
-                ),
+                _ClassInfoCard(session: session, businessName: businessName),
                 const SizedBox(height: 24),
 
                 // Divider
@@ -80,10 +75,7 @@ class BookingScreen extends StatelessWidget {
                 // Booking form
                 const Text(
                   'Complete Your Booking',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
 
@@ -106,7 +98,11 @@ class BookingScreen extends StatelessWidget {
                           padding: const EdgeInsets.all(32.0),
                           child: Column(
                             children: [
-                              const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                              const Icon(
+                                Icons.error_outline,
+                                size: 48,
+                                color: Colors.red,
+                              ),
                               const SizedBox(height: 16),
                               Text(
                                 'Failed to load profile: ${profileState.errorMessage}',
@@ -116,7 +112,9 @@ class BookingScreen extends StatelessWidget {
                               const SizedBox(height: 16),
                               ElevatedButton(
                                 onPressed: () {
-                                  context.read<UserProfileCubit>().loadProfile();
+                                  context
+                                      .read<UserProfileCubit>()
+                                      .loadProfile();
                                 },
                                 child: const Text('Retry'),
                               ),
@@ -128,6 +126,8 @@ class BookingScreen extends StatelessWidget {
 
                     final userCredits = profileState.credits;
                     final hasEnoughCredits = userCredits >= session.credits;
+                    final hasAvailableSpots =
+                        session.capacity > session.bookedCount;
 
                     return Column(
                       children: [
@@ -137,14 +137,59 @@ class BookingScreen extends StatelessWidget {
                           userCredits: userCredits,
                           isLoading: state.status == BookingStatus.loading,
                           onConfirm: () {
+                            if (hasAvailableSpots) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('This class is fully booked'),
+                                  backgroundColor: Colors.red,
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                              return;
+                            }
+
                             context.read<BookingCubit>().createBooking(
                               sessionId: session.id,
                               notes: 'Excited to join!',
                             );
                             // Deduct credits after booking
-                            context.read<UserProfileCubit>().deductCredits(session.credits);
+                            context.read<UserProfileCubit>().deductCredits(
+                              session.credits,
+                            );
                           },
                         ),
+
+                        // Show message if class is full
+                        if (hasAvailableSpots) ...[
+                          const SizedBox(height: 16),
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.orange[50],
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.orange[300]!),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.info_outline,
+                                  color: Colors.orange[700],
+                                  size: 24,
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    'Cannot book: This class is fully booked',
+                                    style: TextStyle(
+                                      color: Colors.orange[900],
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                         if (!hasEnoughCredits) ...[
                           const SizedBox(height: 16),
                           ElevatedButton.icon(
@@ -159,7 +204,10 @@ class BookingScreen extends StatelessWidget {
                                         value: context.read<UserProfileCubit>(),
                                       ),
                                       BlocProvider(
-                                        create: (_) => BookingInjection.getCreditsCubit(apiConsumer),
+                                        create: (_) =>
+                                            BookingInjection.getCreditsCubit(
+                                              apiConsumer,
+                                            ),
                                       ),
                                     ],
                                     child: const PurchaseCreditsScreen(),
@@ -196,18 +244,13 @@ class _ClassInfoCard extends StatelessWidget {
   final Session session;
   final String businessName;
 
-  const _ClassInfoCard({
-    required this.session,
-    required this.businessName,
-  });
+  const _ClassInfoCard({required this.session, required this.businessName});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -216,10 +259,7 @@ class _ClassInfoCard extends StatelessWidget {
             // Title
             Text(
               session.name,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
 
@@ -274,7 +314,41 @@ class _ClassInfoCard extends StatelessWidget {
               icon: Icons.people,
               label: 'Available Spots',
               value: '${session.availableSpots} / ${session.capacity}',
+              valueColor: session.hasAvailableSpots ? null : Colors.red[700],
             ),
+
+            // Show warning if class is full
+            if (!session.hasAvailableSpots) ...[
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.red[300]!),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.warning_amber_rounded,
+                      color: Colors.red[700],
+                      size: 24,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'This class is fully booked. No available spots.',
+                        style: TextStyle(
+                          color: Colors.red[700],
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
             const SizedBox(height: 12),
             _InfoRow(
               icon: Icons.fitness_center,
@@ -316,11 +390,13 @@ class _InfoRow extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
+  final Color? valueColor;
 
   const _InfoRow({
     required this.icon,
     required this.label,
     required this.value,
+    this.valueColor,
   });
 
   @override
@@ -336,17 +412,15 @@ class _InfoRow extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 13, color: Colors.grey[600]),
               ),
               const SizedBox(height: 2),
               Text(
                 value,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
+                  color: valueColor ?? Colors.black87,
                 ),
               ),
             ],

@@ -30,20 +30,14 @@ class EmptyBookingsWidget extends StatelessWidget {
             const SizedBox(height: 24),
             Text(
               message,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             if (submessage != null) ...[
               const SizedBox(height: 12),
               Text(
                 submessage!,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 textAlign: TextAlign.center,
               ),
             ],

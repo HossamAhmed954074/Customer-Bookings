@@ -27,10 +27,7 @@ class _PurchaseCreditsScreenState extends State<PurchaseCreditsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text('Purchase Credits'),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: const Text('Purchase Credits'), elevation: 0),
       body: Column(
         children: [
           // Current balance
@@ -48,10 +45,7 @@ class _PurchaseCreditsScreenState extends State<PurchaseCreditsScreen> {
                   children: [
                     const Text(
                       'Your Current Balance',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -71,10 +65,7 @@ class _PurchaseCreditsScreenState extends State<PurchaseCreditsScreen> {
                     ),
                     const Text(
                       'credits',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.white70, fontSize: 14),
                     ),
                   ],
                 ),
@@ -89,8 +80,9 @@ class _PurchaseCreditsScreenState extends State<PurchaseCreditsScreen> {
                 if (state.status == CreditsStatus.success) {
                   // Reload user credits from API
                   if (state.purchaseResult != null) {
-                    final creditsAdded = state.purchaseResult!['creditsAdded'] as int?;
-                    
+                    final creditsAdded =
+                        state.purchaseResult!['creditsAdded'] as int?;
+
                     // Refresh user profile to get updated credits from server
                     context.read<UserProfileCubit>().loadProfile();
 
@@ -142,7 +134,12 @@ class _PurchaseCreditsScreenState extends State<PurchaseCreditsScreen> {
                         package: package,
                         isLoading: state.status == CreditsStatus.purchasing,
                         onPurchase: () {
-                          _showPurchaseConfirmation(context, package.id, package.name, package.credits);
+                          _showPurchaseConfirmation(
+                            context,
+                            package.id,
+                            package.name,
+                            package.credits,
+                          );
                         },
                       ),
                     );
@@ -165,9 +162,7 @@ class _PurchaseCreditsScreenState extends State<PurchaseCreditsScreen> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text('Confirm Purchase'),
         content: Text(
           'Do you want to purchase $packageName ($credits credits)?\n\nThis is a mock purchase for demonstration.',

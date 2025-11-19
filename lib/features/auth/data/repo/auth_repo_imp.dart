@@ -29,12 +29,7 @@ class AuthRepoImplementation extends AuthRepository {
     String phoneNumber,
   ) {
     try {
-      return authDataSource.register(
-        username,
-        password,
-        email,
-        phoneNumber,
-      );
+      return authDataSource.register(username, password, email, phoneNumber);
     } catch (e) {
       return Future.value(
         Left(DioAppException(message: e.toString(), statusCode: -1)),
