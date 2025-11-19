@@ -5,7 +5,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load();
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    debugPrint("Warning: .env file not found - $e");
+  }
+
   runApp(const MyApp());
 }
 
@@ -18,7 +23,6 @@ class MyApp extends StatelessWidget {
       title: 'Customer Booking',
       theme: ThemeData.light(),
       routerConfig: AppRouters.router,
-
     );
   }
 }
