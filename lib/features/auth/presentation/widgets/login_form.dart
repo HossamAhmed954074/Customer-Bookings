@@ -3,7 +3,7 @@ import 'custom_text_field.dart';
 import 'primary_button.dart';
 
 class LoginForm extends StatefulWidget {
-  final VoidCallback onLoginPressed;
+  final Function(String , String) onLoginPressed;
   final VoidCallback onForgotPasswordPressed;
   final bool isLoading;
 
@@ -53,7 +53,7 @@ class _LoginFormState extends State<LoginForm> {
 
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
-      widget.onLoginPressed();
+      widget.onLoginPressed( _emailController.text.trim(), _passwordController.text.trim());
     }
   }
 
@@ -84,10 +84,7 @@ class _LoginFormState extends State<LoginForm> {
             child: TextButton(
               onPressed: widget.onForgotPasswordPressed,
               style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               ),
               child: const Text(
                 'Forgot Password?',

@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 class SignUpPrompt extends StatelessWidget {
   final VoidCallback onSignUpPressed;
 
-  const SignUpPrompt({
-    super.key,
-    required this.onSignUpPressed,
-  });
+  const SignUpPrompt({super.key, required this.onSignUpPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +12,7 @@ class SignUpPrompt extends StatelessWidget {
       children: [
         Text(
           "Don't have an account? ",
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 14,
-          ),
+          style: TextStyle(color: Colors.grey[600], fontSize: 14),
         ),
         GestureDetector(
           onTap: onSignUpPressed,

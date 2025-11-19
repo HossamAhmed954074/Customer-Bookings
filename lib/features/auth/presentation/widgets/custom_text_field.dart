@@ -39,15 +39,8 @@ class CustomTextField extends StatelessWidget {
         keyboardType: keyboardType,
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(
-            color: Colors.grey[400],
-            fontSize: 16,
-          ),
-          prefixIcon: Icon(
-            prefixIcon,
-            color: Colors.grey[600],
-            size: 20,
-          ),
+          hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
+          prefixIcon: Icon(prefixIcon, color: Colors.grey[600], size: 20),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,
@@ -58,25 +51,17 @@ class CustomTextField extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(
-              color: Color(0xFF4C7EFF),
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: Color(0xFF4C7EFF), width: 2),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(
-              color: Colors.red,
-              width: 1,
-            ),
+            borderSide: const BorderSide(color: Colors.red, width: 1),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(
-              color: Colors.red,
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: Colors.red, width: 2),
           ),
+          
           filled: true,
           fillColor: Colors.white,
           contentPadding: const EdgeInsets.symmetric(
@@ -84,6 +69,7 @@ class CustomTextField extends StatelessWidget {
             vertical: 16,
           ),
         ),
+        onTapOutside: (event) => FocusScope.of(context).unfocus(),
       ),
     );
   }
