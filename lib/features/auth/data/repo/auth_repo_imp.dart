@@ -23,10 +23,11 @@ class AuthRepoImplementation extends AuthRepository {
   }
 
   @override
-  Future<Either<void, DioAppException>> register(
+  Future<Either<DioAppException, bool>> register(
     String username,
     String password,
     String email,
+    String phoneNumber,
   ) {
     // TODO: implement register
     throw UnimplementedError();

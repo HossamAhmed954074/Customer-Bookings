@@ -24,4 +24,26 @@ class AuthDataSource {
       return Left(DioAppException(message: e.toString(), statusCode: -1));
     }
   }
+
+  Future<Either<DioAppException, bool>> register(
+    String username,
+    String password,
+    String email,
+    String phoneNumber,
+  ) async {
+    try {
+      await apiConsumer.post(
+        '/auth/register',
+        data: {
+          'name': username,
+          'password': password,
+          'email': email,
+          'phone': phoneNumber,
+        },
+      );
+      return const Right(true);
+    } catch (e) {
+      return Left(DioAppException(message: e.toString(), statusCode: -1));
+    }
+  }
 }

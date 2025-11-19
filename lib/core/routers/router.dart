@@ -5,6 +5,7 @@ import 'package:customer_booking/features/auth/domain/usecases/login_usecase.dar
 import 'package:customer_booking/features/auth/presentation/cubits/login/cubit/log_in_cubit.dart';
 import 'package:customer_booking/features/auth/presentation/screens/login_screen.dart';
 import 'package:customer_booking/features/auth/presentation/screens/register_screen.dart';
+import 'package:customer_booking/features/home/presentation/screens/home_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +13,7 @@ import 'package:go_router/go_router.dart';
 abstract class AppRouters {
   static const String loginRoute = '/';
   static const String registerRoute = '/register';
+  static const String homeRoute = '/home';
 
   static final GoRouter router = GoRouter(
     initialLocation: '/',
@@ -33,6 +35,7 @@ abstract class AppRouters {
         path: registerRoute,
         builder: (context, state) => const RegisterScreen(),
       ),
+      GoRoute(path: homeRoute, builder: (context, state) => const HomeScreen()),
     ],
   );
 

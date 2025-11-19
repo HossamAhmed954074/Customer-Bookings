@@ -1,7 +1,9 @@
+import 'package:customer_booking/core/routers/router.dart';
 import 'package:customer_booking/features/auth/presentation/cubits/login/cubit/log_in_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../widgets/login_header.dart';
 import '../widgets/login_form.dart';
 import '../widgets/signup_prompt.dart';
@@ -30,10 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleSignUp() {
-    // TODO: Navigate to sign up screen
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Sign up feature coming soon')),
-    );
+    context.push(AppRouters.registerRoute);
   }
 
   @override
@@ -59,8 +58,17 @@ class _LoginScreenState extends State<LoginScreen> {
           listener: (context, state) {
             if (state is LogInSuccess) {
               setState(() {
+                context.go(AppRouters.homeRoute);
                 _isLoading = false;
               });
+            }
+            if (state is LogInFailure) {
+              setState(() {
+                _isLoading = false;
+              });
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
             }
           },
           child: SingleChildScrollView(

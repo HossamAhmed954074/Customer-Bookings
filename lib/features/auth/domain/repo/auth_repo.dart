@@ -7,9 +7,10 @@ abstract class AuthRepository {
     String email,
     String password,
   );
-  Future<Either<void, DioAppException>> register(
+  Future<Either<DioAppException, bool>> register(
     String username,
     String password,
     String email,
+    String phoneNumber,
   );
 }
