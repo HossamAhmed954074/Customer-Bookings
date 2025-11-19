@@ -1,4 +1,5 @@
 import 'package:customer_booking/core/routers/router.dart';
+import 'package:customer_booking/features/home/home_injection.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -10,6 +11,9 @@ void main() async {
   } catch (e) {
     debugPrint("Warning: .env file not found - $e");
   }
+
+  // Initialize Home feature dependencies
+  HomeInjection.init();
 
   runApp(const MyApp());
 }

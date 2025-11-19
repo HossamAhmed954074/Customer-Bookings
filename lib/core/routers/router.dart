@@ -1,3 +1,4 @@
+import 'package:customer_booking/core/presentation/main_navigation_screen.dart';
 import 'package:customer_booking/core/services/api/dio_consumer.dart';
 import 'package:customer_booking/core/services/auth_storage_service.dart';
 import 'package:customer_booking/features/auth/data/datasource/auth_data_source.dart';
@@ -8,7 +9,6 @@ import 'package:customer_booking/features/auth/presentation/cubits/login/cubit/l
 import 'package:customer_booking/features/auth/presentation/cubits/register/cubit/register_cubit.dart';
 import 'package:customer_booking/features/auth/presentation/screens/login_screen.dart';
 import 'package:customer_booking/features/auth/presentation/screens/register_screen.dart';
-import 'package:customer_booking/features/home/presentation/screens/home_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -62,7 +62,10 @@ abstract class AppRouters {
           child: const RegisterScreen(),
         ),
       ),
-      GoRoute(path: homeRoute, builder: (context, state) => const HomeScreen()),
+      GoRoute(
+        path: homeRoute,
+        builder: (context, state) => const MainNavigationScreen(),
+      ),
     ],
   );
 
