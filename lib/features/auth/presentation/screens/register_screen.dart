@@ -1,5 +1,7 @@
+import 'package:customer_booking/features/auth/presentation/cubits/register/cubit/register_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/register_header.dart';
 import '../widgets/register_form.dart';
 import '../widgets/login_prompt.dart';
@@ -14,31 +16,20 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   bool _isLoading = false;
 
-  void _handleRegister() {
+  void _handleRegister(
+    String fullName,
+    String email,
+    String phone,
+    String password,
+    String confirmPassword,
+  ) {
     setState(() {
+      context.read<RegisterCubit>().register(fullName, email, phone, password);
       _isLoading = true;
-    });
-
-    // TODO: Implement actual registration logic with BLoC/Cubit
-    // Simulate API call
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-        // Navigate to verification screen or show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Registration functionality to be implemented'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      }
     });
   }
 
   void _handleLogin() {
-    // TODO: Navigate to login screen
     Navigator.of(context).pop();
   }
 
@@ -65,20 +56,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
         centerTitle: false,
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const RegisterHeader(),
-              RegisterForm(
-                onRegisterPressed: _handleRegister,
-                isLoading: _isLoading,
-              ),
-              const SizedBox(height: 24),
-              LoginPrompt(onLoginPressed: _handleLogin),
-              const SizedBox(height: 40),
-            ],
+        child: BlocListener<RegisterCubit, RegisterState>(
+          listener: (context, state) {
+            if (state is RegisterSuccess) {
+              setState(() {
+                _isLoading = false;
+              });
+              Navigator.of(context).pop();
+            } else if (state is RegisterFailure) {
+              setState(() {
+                _isLoading = false;
+              });
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+            }
+          },
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const RegisterHeader(),
+                RegisterForm(
+                  onRegisterPressed: _handleRegister,
+                  isLoading: _isLoading,
+                ),
+                const SizedBox(height: 24),
+                LoginPrompt(onLoginPressed: _handleLogin),
+                const SizedBox(height: 40),
+              ],
+            ),
           ),
         ),
       ),

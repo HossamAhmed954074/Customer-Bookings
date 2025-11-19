@@ -3,7 +3,7 @@ import 'custom_text_field.dart';
 import 'primary_button.dart';
 
 class RegisterForm extends StatefulWidget {
-  final VoidCallback onRegisterPressed;
+  final Function(String, String, String, String, String) onRegisterPressed;
   final bool isLoading;
 
   const RegisterForm({
@@ -94,7 +94,13 @@ class _RegisterFormState extends State<RegisterForm> {
 
   void _handleRegister() {
     if (_formKey.currentState!.validate()) {
-      widget.onRegisterPressed();
+      widget.onRegisterPressed(
+        _fullNameController.text.trim(),
+        _emailController.text.trim(),
+        _phoneController.text.trim(),
+        _passwordController.text.trim(),
+        _confirmPasswordController.text.trim(),
+      );
     }
   }
 
