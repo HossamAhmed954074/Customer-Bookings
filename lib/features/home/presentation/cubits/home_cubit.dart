@@ -16,6 +16,7 @@ class HomeCubit extends Cubit<HomeState> {
     double? longitude,
     double? radius,
     String? search,
+    String? locationName,
   }) async {
     emit(
       state.copyWith(
@@ -24,6 +25,7 @@ class HomeCubit extends Cubit<HomeState> {
         userLongitude: longitude,
         radius: radius,
         searchQuery: search,
+        locationName: locationName,
       ),
     );
 
@@ -125,6 +127,22 @@ class HomeCubit extends Cubit<HomeState> {
       longitude: state.userLongitude,
       radius: state.radius,
       search: state.searchQuery,
+      locationName: state.locationName,
     );
+  }
+
+  void setLocation(double latitude, double longitude, String locationName) {
+    loadBusinesses(
+      latitude: latitude,
+      longitude: longitude,
+      radius: state.radius,
+      search: state.searchQuery,
+      locationName: locationName,
+    );
+  }
+
+  void updateSearchQuery(String query) {
+    emit(state.copyWith(searchQuery: query));
+    searchBusinesses(query);
   }
 }

@@ -13,6 +13,7 @@ class HomeState extends Equatable {
   final double? userLongitude;
   final double radius; // Search radius in meters
   final String? searchQuery;
+  final String? locationName;
 
   const HomeState({
     this.status = HomeStatus.initial,
@@ -24,6 +25,7 @@ class HomeState extends Equatable {
     this.userLongitude,
     this.radius = 5000, // Default 5km radius
     this.searchQuery,
+    this.locationName,
   });
 
   HomeState copyWith({
@@ -36,6 +38,7 @@ class HomeState extends Equatable {
     double? userLongitude,
     double? radius,
     String? searchQuery,
+    String? locationName,
   }) {
     return HomeState(
       status: status ?? this.status,
@@ -47,6 +50,7 @@ class HomeState extends Equatable {
       userLongitude: userLongitude ?? this.userLongitude,
       radius: radius ?? this.radius,
       searchQuery: searchQuery ?? this.searchQuery,
+      locationName: locationName ?? this.locationName,
     );
   }
 
@@ -61,5 +65,6 @@ class HomeState extends Equatable {
     userLongitude,
     radius,
     searchQuery,
+    locationName,
   ];
 }

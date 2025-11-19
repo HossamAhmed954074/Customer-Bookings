@@ -4,8 +4,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:customer_booking/features/home/domain/entities/session.dart';
 import 'package:customer_booking/features/home/presentation/cubits/home_cubit.dart';
 import 'package:customer_booking/features/home/presentation/cubits/home_state.dart';
+import 'package:customer_booking/features/home/presentation/widgets/header_widget.dart';
+import 'package:customer_booking/features/home/presentation/widgets/search_bar_widget.dart';
+import 'package:customer_booking/features/home/presentation/widgets/map_section_widget.dart';
+import 'package:customer_booking/features/home/presentation/widgets/businesses_list_widget.dart';
+import 'package:customer_booking/features/home/presentation/widgets/location_filter_dialog.dart';
 import 'package:customer_booking/features/home/presentation/widgets/category_filter_chip.dart';
-import 'package:customer_booking/features/home/presentation/widgets/session_card.dart';
 import 'package:customer_booking/features/home/presentation/widgets/filter_button.dart';
 import 'package:customer_booking/features/home/presentation/widgets/sessions_dialog.dart';
 import 'package:customer_booking/features/home/data/datasource/session_remote_data_source.dart';
@@ -67,6 +71,18 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  void _showLocationFilter() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => LocationFilterDialog(
+        currentLocation: context.read<HomeCubit>().state.locationName,
+        onLocationSelected: (lat, lng, locationName) {
+          context.read<HomeCubit>().setLocation(lat, lng, locationName);
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,113 +97,59 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           },
           builder: (context, state) {
-            return Column(
-              children: [
-                // Header with time and calendar icon
-                _buildHeader(),
+            return CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      // Header with time and calendar icon
+                      HeaderWidget(
+                        onCalendarTap: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Calendar feature coming soon'),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
+                        },
+                      ),
 
-                // Google Maps Section
-                _buildMapSection(state),
+                      // Search bar with location filter
+                      SearchBarWidget(
+                        searchQuery: state.searchQuery ?? '',
+                        onSearchChanged: (query) {
+                          context.read<HomeCubit>().updateSearchQuery(query);
+                        },
+                        onLocationTap: _showLocationFilter,
+                        locationText: state.locationName ?? 'Los Angeles, CA',
+                      ),
 
-                // Category Filters
-                _buildCategoryFilters(state),
+                      const SizedBox(height: 16),
+
+                      // Google Maps Section
+                      MapSectionWidget(
+                        state: state,
+                        markers: _markers,
+                        onMapCreated: _onMapCreated,
+                        initialPosition: _initialPosition,
+                      ),
+
+                      // Category Filters
+                      _buildCategoryFilters(state),
+                    ],
+                  ),
+                ),
 
                 // Businesses List
-                Expanded(child: _buildBusinessesList(state)),
+                SliverFillRemaining(
+                  child: BusinessesListWidget(
+                    state: state,
+                    onBusinessTap: _showSessionsForBusiness,
+                  ),
+                ),
               ],
             );
           },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.access_time, size: 20),
-              const SizedBox(width: 8),
-              Text(
-                '${TimeOfDay.now().hour}:${TimeOfDay.now().minute.toString().padLeft(2, '0')}',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Icon(Icons.calendar_today, size: 20),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMapSection(HomeState state) {
-    return Container(
-      height: 250,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: Stack(
-          children: [
-            GoogleMap(
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: _initialPosition,
-              markers: _markers,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: false,
-              zoomControlsEnabled: false,
-              mapToolbarEnabled: false,
-            ),
-            if (state.status == HomeStatus.loading)
-              Container(
-                color: Colors.white.withOpacity(0.7),
-                child: const Center(child: CircularProgressIndicator()),
-              ),
-            Positioned(
-              bottom: 12,
-              right: 12,
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 4,
-                    ),
-                  ],
-                ),
-                child: const Text(
-                  'Google Map Mock',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );
@@ -227,10 +189,9 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.only(right: 16),
             child: FilterButton(
               onTap: () {
-                // TODO: Show filter dialog
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Filter dialog coming soon'),
+                    content: Text('Advanced filters coming soon'),
                     duration: Duration(seconds: 1),
                   ),
                 );
@@ -239,92 +200,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildBusinessesList(HomeState state) {
-    // Debug: Show what state we're in
-    debugPrint(
-      'Building businesses list - Status: ${state.status}, Businesses: ${state.businesses.length}, Filtered: ${state.filteredBusinesses.length}',
-    );
-
-    if (state.status == HomeStatus.loading && state.businesses.isEmpty) {
-      return const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
-            Text('Loading businesses...'),
-          ],
-        ),
-      );
-    }
-
-    if (state.status == HomeStatus.error) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Text(
-                state.errorMessage ?? 'An error occurred',
-                style: const TextStyle(fontSize: 16),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => context.read<HomeCubit>().refreshBusinesses(),
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
-      );
-    }
-
-    if (state.filteredBusinesses.isEmpty &&
-        state.status == HomeStatus.success) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.store_outlined, size: 64, color: Colors.grey),
-            const SizedBox(height: 16),
-            const Text(
-              'No businesses found',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              state.selectedCategory != null
-                  ? 'Try selecting a different category'
-                  : 'Try adjusting your search location',
-              style: const TextStyle(color: Colors.grey),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => context.read<HomeCubit>().refreshBusinesses(),
-              child: const Text('Refresh'),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemCount: state.filteredBusinesses.length,
-      itemBuilder: (context, index) {
-        final business = state.filteredBusinesses[index];
-        return BusinessCard(
-          business: business,
-          onTap: () => _showSessionsForBusiness(context, business),
-        );
-      },
     );
   }
 

@@ -32,12 +32,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         create: (context) => HomeInjection.getHomeCubit(),
         child: const HomeScreen(),
       ),
-      const ExplorePlaceholder(),
+     
       BlocProvider(
         create: (context) => BookingInjection.getMyBookingsCubit(_apiConsumer),
         child: const MyBookingsScreen(),
       ),
-      const WalletPlaceholder(),
+     
       BlocProvider(
         create: (context) => UserProfileCubit(apiConsumer: _apiConsumer),
         child: const ProfileScreen(),
@@ -85,21 +85,21 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 activeIcon: Icon(Icons.home),
                 label: 'Home',
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.explore_outlined),
-                activeIcon: Icon(Icons.explore),
-                label: 'Explore',
-              ),
+              // BottomNavigationBarItem(
+              //   icon: Icon(Icons.explore_outlined),
+              //   activeIcon: Icon(Icons.explore),
+              //   label: 'Explore',
+              // ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.book_outlined),
                 activeIcon: Icon(Icons.book),
                 label: 'Bookings',
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.account_balance_wallet_outlined),
-                activeIcon: Icon(Icons.account_balance_wallet),
-                label: 'Wallet',
-              ),
+              // BottomNavigationBarItem(
+              //   icon: Icon(Icons.account_balance_wallet_outlined),
+              //   activeIcon: Icon(Icons.account_balance_wallet),
+              //   label: 'Wallet',
+              // ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person_outline),
                 activeIcon: Icon(Icons.person),
