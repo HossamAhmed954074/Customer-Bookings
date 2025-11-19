@@ -29,7 +29,17 @@ class AuthRepoImplementation extends AuthRepository {
     String email,
     String phoneNumber,
   ) {
-    // TODO: implement register
-    throw UnimplementedError();
+    try {
+      return authDataSource.register(
+        username,
+        password,
+        email,
+        phoneNumber,
+      );
+    } catch (e) {
+      return Future.value(
+        Left(DioAppException(message: e.toString(), statusCode: -1)),
+      );
+    }
   }
 }

@@ -32,13 +32,15 @@ class AuthDataSource {
     String phoneNumber,
   ) async {
     try {
+      print('Registering user: $username, $email, $phoneNumber');
       await apiConsumer.post(
         '/auth/register',
         data: {
-          'name': username,
-          'password': password,
-          'email': email,
-          'phone': phoneNumber,
+          'name': username.trim(),
+          'email': email.trim(),
+          'password': password.trim(),
+
+          'phone': phoneNumber.trim(),
         },
       );
       return const Right(true);

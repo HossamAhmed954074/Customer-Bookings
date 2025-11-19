@@ -12,6 +12,7 @@ class RegisterUseCase {
     String phoneNumber,
   ) async {
     try {
+     
       return await repository.register(username, password, email, phoneNumber);
     } catch (e) {
       return Future.value(

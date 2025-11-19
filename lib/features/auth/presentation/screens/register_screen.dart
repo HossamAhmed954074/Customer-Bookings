@@ -24,7 +24,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     String confirmPassword,
   ) {
     setState(() {
-      context.read<RegisterCubit>().register(fullName, email, phone, password);
+      context.read<RegisterCubit>().register(fullName, password, email, phone);
+
       _isLoading = true;
     });
   }

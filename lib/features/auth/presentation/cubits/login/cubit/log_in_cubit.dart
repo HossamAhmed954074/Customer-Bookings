@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:customer_booking/core/services/auth_storage_service.dart';
 import 'package:customer_booking/features/auth/domain/entities/auth_entity.dart';
 import 'package:customer_booking/features/auth/domain/usecases/login_usecase.dart';
 import 'package:meta/meta.dart';
@@ -13,7 +14,11 @@ class LogInCubit extends Cubit<LogInState> {
     final result = await _loginUseCase(email, password);
     result.fold(
       (failure) => emit(LogInFailure(errorMessage: failure.message)),
-      (authEntity) => emit(LogInSuccess(authEntity: authEntity)),
+      (authEntity) async {
+        // Save token to local storage
+        await AuthStorageService.saveToken(authEntity.token);
+        emit(LogInSuccess(authEntity: authEntity));
+      },
     );
   }
 }

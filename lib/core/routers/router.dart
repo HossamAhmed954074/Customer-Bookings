@@ -1,4 +1,5 @@
 import 'package:customer_booking/core/services/api/dio_consumer.dart';
+import 'package:customer_booking/core/services/auth_storage_service.dart';
 import 'package:customer_booking/features/auth/data/datasource/auth_data_source.dart';
 import 'package:customer_booking/features/auth/data/repo/auth_repo_imp.dart';
 import 'package:customer_booking/features/auth/domain/usecases/login_usecase.dart';
@@ -19,7 +20,24 @@ abstract class AppRouters {
 
   static final GoRouter router = GoRouter(
     initialLocation: '/',
+    redirect: (context, state) async {
+      final isLoggedIn = await AuthStorageService.isLoggedIn();
+      final isGoingToLogin = state.matchedLocation == loginRoute;
+      final isGoingToRegister = state.matchedLocation == registerRoute;
 
+      // If user is logged in and trying to access login/register, redirect to home
+      if (isLoggedIn && (isGoingToLogin || isGoingToRegister)) {
+        return homeRoute;
+      }
+
+      // If user is not logged in and trying to access home, redirect to login
+      if (!isLoggedIn && state.matchedLocation == homeRoute) {
+        return loginRoute;
+      }
+
+      // No redirect needed
+      return null;
+    },
     routes: [
       // Define your app routes here
       GoRoute(
@@ -49,7 +67,7 @@ abstract class AppRouters {
   );
 
   // Example method to clear authentication cache
-  static void clearAuthCache() {
-    // Implement cache clearing logic here
+  static void clearAuthCache() async {
+    await AuthStorageService.clearToken();
   }
 }

@@ -13,6 +13,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     String email,
     String phoneNumber,
   ) async {
+     
     emit(RegisterLoading());
     final result = await _registerUseCase(
       username,
