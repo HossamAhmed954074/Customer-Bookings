@@ -57,6 +57,10 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: BitmapDescriptor.defaultMarkerWithHue(
               BitmapDescriptor.hueBlue,
             ),
+            onTap: () {
+              // Show sessions dialog when marker is tapped
+              _showSessionsForBusiness(context, business);
+            },
           ),
         );
       }

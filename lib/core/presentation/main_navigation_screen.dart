@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:customer_booking/features/home/home_injection.dart';
 import 'package:customer_booking/features/home/presentation/screens/home_screen.dart';
+import 'package:customer_booking/features/bookings/presentation/screens/my_bookings_screen.dart';
+import 'package:customer_booking/features/bookings/booking_injection.dart';
+import 'package:customer_booking/features/profile/presentation/screens/profile_screen.dart';
+import 'package:customer_booking/core/presentation/cubits/user_profile_cubit.dart';
+import 'package:customer_booking/core/services/api/dio_consumer.dart';
+import 'package:dio/dio.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -12,18 +18,31 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedIndex = 0;
+  final _apiConsumer = DioConsumer(dio: Dio());
 
   // Screens for each tab
-  final List<Widget> _screens = [
-    BlocProvider(
-      create: (context) => HomeInjection.getHomeCubit(),
-      child: const HomeScreen(),
-    ),
-    const ExplorePlaceholder(),
-    const BookingsPlaceholder(),
-    const WalletPlaceholder(),
-    const ProfilePlaceholder(),
-  ];
+  late final List<Widget> _screens;
+
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      BlocProvider(
+        create: (context) => HomeInjection.getHomeCubit(),
+        child: const HomeScreen(),
+      ),
+      const ExplorePlaceholder(),
+      BlocProvider(
+        create: (context) => BookingInjection.getMyBookingsCubit(_apiConsumer),
+        child: const MyBookingsScreen(),
+      ),
+      const WalletPlaceholder(),
+      BlocProvider(
+        create: (context) => UserProfileCubit(apiConsumer: _apiConsumer),
+        child: const ProfileScreen(),
+      ),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -107,40 +126,6 @@ class ExplorePlaceholder extends StatelessWidget {
             SizedBox(height: 16),
             Text(
               'Explore',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Coming soon...',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class BookingsPlaceholder extends StatelessWidget {
-  const BookingsPlaceholder({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Bookings'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: Colors.black,
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.book, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
-            Text(
-              'My Bookings',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),

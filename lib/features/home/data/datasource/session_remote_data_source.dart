@@ -156,7 +156,7 @@ class BusinessRemoteDataSourceImpl implements BusinessRemoteDataSource {
       debugPrint('Query Parameters: $queryParameters');
 
       final response = await apiConsumer.get(
-        "/sessions",
+        "/class-sessions",
         queryParameters: queryParameters,
       );
 

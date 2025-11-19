@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:customer_booking/features/home/domain/entities/session_entity.dart';
+import 'package:customer_booking/features/bookings/presentation/screens/booking_screen.dart';
+import 'package:customer_booking/features/bookings/booking_injection.dart';
+import 'package:customer_booking/core/services/api/dio_consumer.dart';
+import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 
 class SessionsDialog extends StatelessWidget {
@@ -97,7 +102,10 @@ class SessionsDialog extends StatelessWidget {
                   itemCount: sessions.length,
                   itemBuilder: (context, index) {
                     final session = sessions[index];
-                    return _SessionItem(session: session);
+                    return _SessionItem(
+                      session: session,
+                      businessName: businessName,
+                    );
                   },
                 ),
               ),
@@ -110,8 +118,12 @@ class SessionsDialog extends StatelessWidget {
 
 class _SessionItem extends StatelessWidget {
   final Session session;
+  final String businessName;
 
-  const _SessionItem({required this.session});
+  const _SessionItem({
+    required this.session,
+    required this.businessName,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -125,15 +137,33 @@ class _SessionItem extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
-          onTap: () {
-            // TODO: Navigate to session booking
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Book ${session.name}'),
-                duration: const Duration(seconds: 1),
-              ),
-            );
-          },
+          onTap: session.hasAvailableSpots
+              ? () {
+                  // Navigate to booking screen
+                  final apiConsumer = DioConsumer(dio: Dio());
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => MultiBlocProvider(
+                        providers: [
+                          BlocProvider(
+                            create: (_) =>
+                                BookingInjection.getBookingCubit(apiConsumer),
+                          ),
+                          BlocProvider(
+                            create: (_) =>
+                                BookingInjection.getUserProfileCubit(apiConsumer)
+                                  ..loadProfile(),
+                          ),
+                        ],
+                        child: BookingScreen(
+                          session: session,
+                          businessName: businessName,
+                        ),
+                      ),
+                    ),
+                  );
+                }
+              : null,
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -243,18 +273,24 @@ class _SessionItem extends StatelessWidget {
                       color: Colors.grey[600],
                     ),
                     const SizedBox(width: 6),
-                    Text(
-                      '${session.duration} min',
-                      style: TextStyle(fontSize: 13, color: Colors.grey[700]),
+                    Flexible(
+                      child: Text(
+                        '${session.duration} min',
+                        style: TextStyle(fontSize: 13, color: Colors.grey[700]),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 12),
                     Icon(Icons.stars, size: 16, color: Colors.grey[600]),
                     const SizedBox(width: 6),
-                    Text(
-                      '${session.credits} credits',
-                      style: TextStyle(fontSize: 13, color: Colors.grey[700]),
+                    Flexible(
+                      child: Text(
+                        '${session.credits} credits',
+                        style: TextStyle(fontSize: 13, color: Colors.grey[700]),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                    const Spacer(),
+                    const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,

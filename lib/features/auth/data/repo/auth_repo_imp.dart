@@ -1,7 +1,6 @@
 import 'package:customer_booking/core/error/dio_exeption.dart';
 import 'package:customer_booking/features/auth/data/datasource/auth_data_source.dart';
 import 'package:customer_booking/features/auth/data/models/auth_model.dart';
-import 'package:customer_booking/features/auth/domain/entities/auth_entity.dart';
 import 'package:customer_booking/features/auth/domain/repo/auth_repo.dart';
 import 'package:dartz/dartz.dart';
 

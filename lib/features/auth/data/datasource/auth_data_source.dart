@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:customer_booking/core/error/dio_exeption.dart';
 import 'package:customer_booking/core/services/api/api_consumer.dart';
 import 'package:customer_booking/features/auth/data/models/auth_model.dart';
@@ -32,7 +30,6 @@ class AuthDataSource {
     String phoneNumber,
   ) async {
     try {
-      print('Registering user: $username, $email, $phoneNumber');
       await apiConsumer.post(
         '/auth/register',
         data: {
