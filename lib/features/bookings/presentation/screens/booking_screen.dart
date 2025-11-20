@@ -127,7 +127,7 @@ class BookingScreen extends StatelessWidget {
                     final userCredits = profileState.credits;
                     final hasEnoughCredits = userCredits >= session.credits;
                     final hasAvailableSpots =
-                        session.capacity > session.bookedCount;
+                        session.availableSpots < session.capacity;
 
                     return Column(
                       children: [
@@ -137,7 +137,7 @@ class BookingScreen extends StatelessWidget {
                           userCredits: userCredits,
                           isLoading: state.status == BookingStatus.loading,
                           onConfirm: () {
-                            if (hasAvailableSpots) {
+                            if (!hasAvailableSpots) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text('This class is fully booked'),
@@ -147,7 +147,9 @@ class BookingScreen extends StatelessWidget {
                               );
                               return;
                             }
-
+                            print(
+                              ' ####### Booking confirmed for session: ${session.bookedCount}  **** ${session.capacity}',
+                            );
                             context.read<BookingCubit>().createBooking(
                               sessionId: session.id,
                               notes: 'Excited to join!',
@@ -160,7 +162,7 @@ class BookingScreen extends StatelessWidget {
                         ),
 
                         // Show message if class is full
-                        if (hasAvailableSpots) ...[
+                        if (!hasAvailableSpots) ...[
                           const SizedBox(height: 16),
                           Container(
                             padding: const EdgeInsets.all(16),
