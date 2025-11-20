@@ -1,4 +1,5 @@
 import 'package:customer_booking/features/bookings/domain/entities/booking_entity.dart';
+import 'package:flutter/widgets.dart';
 
 class BookingModel {
   final String id;
@@ -34,12 +35,6 @@ class BookingModel {
   });
 
   factory BookingModel.fromJson(Map<String, dynamic> json) {
-    // Debug date formats
-    print('=== BOOKING DATE DEBUG ===');
-    print('sessionDate from API: ${json['sessionDate']}');
-    print('createdAt from API: ${json['createdAt']}');
-    print('cancelledAt from API: ${json['cancelledAt']}');
-
     return BookingModel(
       id: json['_id'] ?? json['id'] ?? '',
       sessionId: json['sessionId'] ?? '',
@@ -51,7 +46,7 @@ class BookingModel {
       sessionStartTime: json['sessionStartTime'] ?? json['startTime'] ?? '',
       sessionEndTime: json['sessionEndTime'] ?? json['endTime'] ?? '',
       credits: json['credits'] ?? 0,
-      status: json['status'] ?? 'confirmed',
+      status: json['status'] ?? 'not specified',
       notes: json['notes'],
       createdAt: json['createdAt'] ?? DateTime.now().toIso8601String(),
       cancelledAt: json['cancelledAt'],
@@ -70,7 +65,6 @@ class BookingModel {
       'sessionStartTime': sessionStartTime,
       'sessionEndTime': sessionEndTime,
       'credits': credits,
-      'status': status,
       if (notes != null) 'notes': notes,
       'createdAt': createdAt,
       if (cancelledAt != null) 'cancelledAt': cancelledAt,
@@ -127,7 +121,7 @@ class BookingModel {
         }
       } catch (parseError) {
         // If all parsing fails, return current date
-        print('Failed to parse date: $dateString, error: $parseError');
+        debugPrint('Failed to parse date: $dateString, error: $parseError');
       }
       // Fallback to current date if parsing fails
       return DateTime.now();

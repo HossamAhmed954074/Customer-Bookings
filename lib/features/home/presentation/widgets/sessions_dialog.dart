@@ -331,8 +331,9 @@ class _SessionItem extends StatelessWidget {
     if (name.contains('pilates')) return Icons.accessibility_new;
     if (name.contains('hiit') || name.contains('cardio')) return Icons.flash_on;
     if (name.contains('dance')) return Icons.music_note;
-    if (name.contains('spin') || name.contains('cycle'))
+    if (name.contains('spin') || name.contains('cycle')) {
       return Icons.pedal_bike;
+    }
     return Icons.fitness_center;
   }
 
