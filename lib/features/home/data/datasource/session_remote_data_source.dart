@@ -70,8 +70,8 @@ class BusinessRemoteDataSourceImpl implements BusinessRemoteDataSource {
       } else if (response.data is Map && response.data['items'] != null) {
         dataList = response.data['items'] as List;
         debugPrint('✓ Response has items array with ${dataList.length} items');
-      } else if (response.data is Map && response.data['data'] != null) {
-        dataList = response.data['data'] as List;
+      } else if (response.data is Map && response.data['items'] != null) {
+        dataList = response.data['items'] as List;
         debugPrint('✓ Response has nested data with ${dataList.length} items');
       } else {
         debugPrint('✗ Unexpected response format');
@@ -118,8 +118,8 @@ class BusinessRemoteDataSourceImpl implements BusinessRemoteDataSource {
       // Handle both direct object and nested data property
       Map<String, dynamic> data;
       if (response.data is Map) {
-        if (response.data['data'] != null) {
-          data = response.data['data'] as Map<String, dynamic>;
+        if (response.data['items'] != null) {
+          data = response.data['items'] as Map<String, dynamic>;
         } else {
           data = response.data as Map<String, dynamic>;
         }
@@ -144,12 +144,12 @@ class BusinessRemoteDataSourceImpl implements BusinessRemoteDataSource {
     try {
       final Map<String, dynamic> queryParameters = {'businessId': businessId};
 
-      if (dateFrom != null) {
-        queryParameters['dateFrom'] = dateFrom.toIso8601String().split('T')[0];
-      }
-      if (dateTo != null) {
-        queryParameters['dateTo'] = dateTo.toIso8601String().split('T')[0];
-      }
+      // if (dateFrom != null) {
+      //   queryParameters['dateFrom'] = dateFrom.toIso8601String().split('T')[0];
+      // }
+      // if (dateTo != null) {
+      //   queryParameters['dateTo'] = dateTo.toIso8601String().split('T')[0];
+      // }
 
       debugPrint('=== SESSIONS API REQUEST ===');
       debugPrint('Business ID: $businessId');
@@ -172,7 +172,7 @@ class BusinessRemoteDataSourceImpl implements BusinessRemoteDataSource {
       } else if (response.data is Map && response.data['items'] != null) {
         dataList = response.data['items'] as List;
         debugPrint('✓ Response has items array with ${dataList.length} items');
-      } else if (response.data is Map && response.data['data'] != null) {
+      } else if (response.data is Map && response.data['items'] != null) {
         dataList = response.data['data'] as List;
         debugPrint('✓ Response has data array with ${dataList.length} items');
       } else {

@@ -31,7 +31,7 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
       debugPrint('=== CREATE BOOKING API REQUEST ===');
       debugPrint('Request: ${request.toJson()}');
       debugPrint('Idempotency Key: ${request.idempotencyKey}');
-
+      debugPrint('Headers: $request.headers');
       final response = await apiConsumer.post(
         '/bookings',
         data: request.toJson(),
