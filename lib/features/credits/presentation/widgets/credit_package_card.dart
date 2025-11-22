@@ -20,7 +20,7 @@ class CreditPackageCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: package.isPopular
-            ? BorderSide(color: Colors.blue, width: 2)
+            ? const BorderSide(color: Colors.blue, width: 2)
             : BorderSide.none,
       ),
       child: Stack(
